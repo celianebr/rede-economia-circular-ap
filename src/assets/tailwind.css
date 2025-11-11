@@ -1,0 +1,13 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* custom small rules */
+:root{
+  --primary: #08748C;
+  --muted: #F2F2F2;
+}
+body{ font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
+.container{ max-width:900px; margin:0 auto; padding:20px; }
+.card{ background:var(--muted); padding:18px; border-radius:8px; }
+.btn{ @apply px-4 py-2 rounded text-white; background-color:var(--primary); }
