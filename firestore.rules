@@ -1,0 +1,14 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Coleção de usuários (users)
+    match /users/{userId} {
+      // Qualquer pessoa autenticada pode ler
+      allow read: if request.auth != null;
+      
+      // Apenas o usuário dono pode criar, atualizar ou excluir o próprio perfil
+      allow create, update, delete: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
