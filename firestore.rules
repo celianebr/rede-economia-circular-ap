@@ -4,8 +4,8 @@ service cloud.firestore {
     
     // Coleção de usuários (users)
     match /users/{userId} {
-      // Qualquer pessoa autenticada pode ler
-      allow read: if request.auth != null;
+      // Qualquer pessoa pode ler (autenticada ou não)
+      allow read: if true;
       
       // Apenas o usuário dono pode criar, atualizar ou excluir o próprio perfil
       allow create, update, delete: if request.auth != null && request.auth.uid == userId;

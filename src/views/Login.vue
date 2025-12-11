@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="flex items-center justify-between py-4">
-      <div class="text-xl font-bold text-lz-primary">Movimento Lixo Zero Amapá</div>
+      <div class="text-xl font-bold text-primary">Movimento Lixo Zero Amapá</div>
       <router-link to="/signup" class="text-sm">Cadastrar</router-link>
     </div>
 
@@ -16,7 +16,7 @@
         <input type="password" v-model="password" class="w-full px-3 py-2 rounded" />
       </div>
       <div class="mt-4">
-        <button class="btn" @click="submit" :disabled="loading">
+        <button class="w-full px-4 py-2 bg-primary text-white rounded font-semibold hover:opacity-90 transition-opacity" @click="submit" :disabled="loading">
           {{ loading ? 'Entrando...' : 'Entrar' }}
         </button>
       </div>
@@ -55,3 +55,8 @@ async function submit() {
   }
 }
 </script>
+
+<style scoped>
+.text-primary { color: #16524a; }
+.bg-primary { background-color: #16524a; }
+</style>

@@ -4,7 +4,7 @@
 
 /* custom small rules */
 :root{
-  --primary: #08748C;
+  --primary: #16524a;
   --muted: #F2F2F2;
 }
 body{ font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }

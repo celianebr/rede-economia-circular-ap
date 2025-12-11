@@ -4,7 +4,7 @@
     <main class="container mt-6">
       <div class="card mb-4">
         <h1 class="text-xl font-semibold">
-          Bem-vindo(a), <strong>{{ profile.nome || userId }}</strong>!
+          Bem-vindo(a), <strong>{{ profile.nome || profile.nomeFantasia || 'Usuário' }}</strong>!
         </h1>
         <p class="text-sm text-gray-600">
           Você agora faz parte da Rede de Agentes da Economia Circular do Amapá.

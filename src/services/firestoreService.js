@@ -4,12 +4,12 @@ import { doc, setDoc, getDoc } from "firebase/firestore";
 
 // Salva (cria ou atualiza) o perfil
 export async function salvarPerfil(usuarioId, dados) {
-  await setDoc(doc(db, "usuarios", usuarioId), dados, { merge: true });
+  await setDoc(doc(db, "users", usuarioId), dados, { merge: true });
 }
 
 // Busca um perfil
 export async function buscarPerfil(usuarioId) {
-  const ref = doc(db, "usuarios", usuarioId);
+  const ref = doc(db, "users", usuarioId);
   const snap = await getDoc(ref);
   return snap.exists() ? snap.data() : null;
 }

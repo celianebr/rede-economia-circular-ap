@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <div class="flex items-center justify-between py-4">
-      <div class="text-xl font-bold text-lz-primary">Movimento Lixo Zero Amapá</div>
+      <div class="text-xl font-bold text-primary">Movimento Lixo Zero Amapá</div>
       <router-link to="/login" class="text-sm">Entrar</router-link>
     </div>
 
@@ -20,7 +20,7 @@
         <input type="password" v-model="password" class="w-full px-3 py-2 rounded" />
       </div>
       <div class="mt-4">
-        <button class="btn" @click="submit" :disabled="loading">{{ loading ? 'Aguarde...' : 'Cadastrar' }}</button>
+        <button class="w-full px-4 py-2 bg-primary text-white rounded font-semibold hover:opacity-90 transition-opacity" @click="submit" :disabled="loading">{{ loading ? 'Aguarde...' : 'Cadastrar' }}</button>
       </div>
       <p class="text-sm mt-3">Já tem conta? <router-link to="/login">Entrar</router-link></p>
     </div>
@@ -30,9 +30,9 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
-import { getAuth, createUserWithEmailAndPassword } from 'firebase/auth'
-import { getFirestore, doc, setDoc } from 'firebase/firestore'
-import { firebaseService as api } from '../services/firebase.js'
+import { createUserWithEmailAndPassword } from 'firebase/auth'
+import { doc, setDoc } from 'firebase/firestore'
+import { auth, db } from '../services/firebase.js'
 
 
 const router = useRouter()
@@ -48,8 +48,6 @@ async function submit() {
   }
 
   loading.value = true
-  const auth = getAuth()
-  const db = getFirestore()
 
   try {
     const userCredential = await createUserWithEmailAndPassword(auth, email.value, password.value)
@@ -69,3 +67,8 @@ async function submit() {
   }
 }
 </script>
+
+<style scoped>
+.text-primary { color: #16524a; }
+.bg-primary { background-color: #16524a; }
+</style>

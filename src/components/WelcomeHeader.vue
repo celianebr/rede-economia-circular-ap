@@ -18,5 +18,5 @@
 defineEmits(['logout'])
 </script>
 <style scoped>
-.text-lz-primary{ color: #08748C; font-weight:700; }
+.text-lz-primary{ color: #16524a; font-weight:700; }
 </style>
