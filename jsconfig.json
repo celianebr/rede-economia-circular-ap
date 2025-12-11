@@ -12,7 +12,12 @@
             "esnext",
             "dom"
         ],
-        "baseUrl": "."
+        "baseUrl": ".",
+        "paths": {
+            "@/*": [
+                "src/*"
+            ]
+        }
     },
     "vueCompilerOptions": {
         "globalTypesPath": "./node_modules/.vue-global-types/vue_3.d.ts"
