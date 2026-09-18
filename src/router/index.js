@@ -2,9 +2,11 @@ import { createRouter, createWebHistory } from 'vue-router'
 import Home from '../views/Home.vue'
 import Signup from '../views/Signup.vue'
 import Login from '../views/Login.vue'
+import CadastroPerfil from '../views/CadastroPerfil.vue'
 import Profile from '../views/Profile.vue'
 import Search from '../views/Search.vue'
 import PublicProfile from '../views/PublicProfile.vue'
+import QuemSomos from '../views/QuemSomos.vue'
 import { auth } from '../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 
@@ -12,9 +14,11 @@ const routes = [
   { path: '/', component: Home },
   { path: '/signup', component: Signup },
   { path: '/login', component: Login },
+  { path: '/cadastro/perfil', component: CadastroPerfil, meta: { requiresAuth: true } },
   { path: '/profile', component: Profile, meta: { requiresAuth: true } },
   { path: '/search', component: Search },
-  { path: '/u/:id', component: PublicProfile }
+  { path: '/u/:id', component: PublicProfile },
+  { path: '/quem-somos', component: QuemSomos }
 ]
 
 const router = createRouter({
