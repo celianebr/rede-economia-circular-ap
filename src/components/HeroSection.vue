@@ -27,9 +27,7 @@
 </template>
 
 <script setup>
-// TODO: trocar pelo arquivo enviado por Celiane (amapa-economia-circular-*.svg)
-// assim que ele estiver disponível — por ora usa a imagem já existente no projeto.
-const heroImage = '/img/mapa_ap.png'
+const heroImage = '/img/amapa-economia-circular.png'
 </script>
 
 <style scoped>
@@ -89,9 +87,10 @@ const heroImage = '/img/mapa_ap.png'
   flex-shrink: 0;
 }
 .hero-image img {
-  width: 360px;
+  width: auto;
   max-width: 100%;
   height: auto;
+  max-height: 460px;
   display: block;
 }
 
