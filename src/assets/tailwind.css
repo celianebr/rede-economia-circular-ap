@@ -2,12 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* custom small rules */
-:root{
-  --primary: #16524a;
+/*
+  Paleta "Mapa dos Agentes da Economia Circular do Amapá"
+  (ver handoff de design)
+*/
+:root {
+  --color-accent: #2F5D3A;
+  --color-accent-hover: #1F4A2C;
+  --color-catador: #2F5D3A;
+  --color-cooperativa: #B9622E;
+  --color-empresa: #3B5A73;
+  --color-pesquisador: #6B4E8E;
+  --color-bg: #FAF8F3;
+  --color-surface: #FFFFFF;
+  --color-text: #1C1B17;
+  --color-text-2: #4A453B;
+  --color-text-3: #6B6558;
+  --color-border: #E4DFD3;
+  --color-border-2: #D8D2C4;
+  --color-chip-bg: #F0ECE1;
+
+  --font-display: 'Fraunces', serif;
+  --font-sans: 'Public Sans', sans-serif;
+
+  /* aliases mantidos por compatibilidade com código existente */
+  --primary: var(--color-accent);
   --muted: #F2F2F2;
 }
-body{ font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial; }
-.container{ max-width:900px; margin:0 auto; padding:20px; }
-.card{ background:var(--muted); padding:18px; border-radius:8px; }
-.btn{ @apply px-4 py-2 rounded text-white; background-color:var(--primary); }
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  background: var(--color-bg);
+  color: var(--color-text);
+}
+
+h1, h2, h3, .font-display {
+  font-family: var(--font-display);
+}
+
+a { color: var(--color-accent); }
+a:hover { color: var(--color-accent-hover); }
+
+.container { max-width: 1200px; margin: 0 auto; padding: 20px; }
+.card { background: var(--color-surface); border: 1px solid var(--color-border); padding: 18px; border-radius: 12px; }
+.btn { @apply px-4 py-2 rounded-lg font-semibold text-white transition-colors; background-color: var(--color-accent); }
+.btn:hover { background-color: var(--color-accent-hover); }
+.btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+.btn-outline {
+  @apply px-4 py-2 rounded-lg font-semibold transition-colors bg-white;
+  color: var(--color-accent);
+  border: 2px solid var(--color-accent);
+}
+.btn-outline:hover { background: rgba(47,93,58,0.06); }
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+  font-family: var(--font-sans);
+}

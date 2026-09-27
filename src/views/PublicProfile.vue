@@ -162,9 +162,9 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.text-primary { color: #16524a; }
-.bg-primary { background-color: #16524a; }
-.bg-primary\/10 { background-color: rgba(22, 82, 74, 0.1); }
-.border-primary { border-color: #16524a; }
-.border-primary\/20 { border-color: rgba(22, 82, 74, 0.2); }
+.text-primary { color: #2F5D3A; }
+.bg-primary { background-color: #2F5D3A; }
+.bg-primary\/10 { background-color: rgba(47, 93, 58, 0.1); }
+.border-primary { border-color: #2F5D3A; }
+.border-primary\/20 { border-color: rgba(47, 93, 58, 0.2); }
 </style>
