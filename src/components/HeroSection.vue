@@ -36,8 +36,8 @@ const heroImage = '/img/amapa-economia-circular.png'
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 40px;
-  padding: 48px 64px;
+  gap: 32px;
+  padding: 28px 64px;
   max-width: 1440px;
   margin: 0 auto;
   width: 100%;
@@ -47,9 +47,10 @@ const heroImage = '/img/amapa-economia-circular.png'
 .hero-text {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 18px;
   max-width: 600px;
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
 }
 .hero-text h1 {
   margin: 0;
@@ -84,19 +85,35 @@ const heroImage = '/img/amapa-economia-circular.png'
   text-decoration: none;
 }
 .hero-image {
-  flex-shrink: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 100%;
 }
 .hero-image img {
   width: auto;
   max-width: 100%;
   height: auto;
-  max-height: 460px;
+  max-height: 340px;
   display: block;
+  margin: 0 auto;
 }
 
 @media (max-width: 900px) {
-  .hero { padding: 32px 24px; justify-content: center; text-align: center; }
-  .hero-text { align-items: center; }
+  .hero { padding: 28px 24px; justify-content: center; text-align: center; }
+  .hero-text {
+    align-items: center;
+    max-width: 100%;
+    flex-shrink: 1;
+    min-width: 0;
+    width: 100%;
+  }
+  .hero-text h1 { font-size: 32px; }
   .hero-ctas { justify-content: center; }
+  .hero-image { width: 100%; }
+  .hero-image img { max-height: 240px; margin: 0 auto; }
+}
+
+@media (max-width: 480px) {
+  .hero-text h1 { font-size: 27px; }
 }
 </style>

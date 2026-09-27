@@ -21,7 +21,7 @@ const year = computed(() => new Date().getFullYear())
 
 <style scoped>
 .site-footer {
-  padding: 18px 64px;
+  padding: 14px 64px;
   text-align: center;
   border-top: 1px solid var(--color-border);
   font-size: 12.5px;

@@ -2,7 +2,7 @@
   <header class="site-header">
     <div class="header-inner">
       <router-link to="/" class="brand">
-        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17.5 6.5a7.5 7.5 0 0 0-11.9 1.9"></path>
           <path d="M4 4v4h4"></path>
           <path d="M6.5 17.5a7.5 7.5 0 0 0 11.9-1.9"></path>
@@ -46,7 +46,7 @@ const route = useRoute()
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 64px;
+  padding: 18px 64px;
   max-width: 1440px;
   margin: 0 auto;
   gap: 16px;
@@ -66,12 +66,13 @@ const route = useRoute()
 .brand-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 26px;
+  line-height: 1.2;
   color: var(--color-text);
 }
 .brand-subtitle {
   font-family: var(--font-sans);
-  font-size: 12px;
+  font-size: 15px;
   color: var(--color-text-3);
 }
 .nav {
@@ -89,7 +90,23 @@ const route = useRoute()
 .nav-link.active { font-weight: 700; color: var(--color-accent); }
 
 @media (max-width: 640px) {
-  .header-inner { padding: 16px 20px; }
-  .brand-subtitle { display: none; }
+  .header-inner {
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 20px;
+    gap: 12px;
+  }
+  .brand {
+    flex-direction: column;
+    text-align: center;
+    gap: 6px;
+  }
+  .brand-title { font-size: 18px; }
+  .brand-subtitle { font-size: 12.5px; }
+  .nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+  }
 }
 </style>
