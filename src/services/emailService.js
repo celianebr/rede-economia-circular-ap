@@ -21,15 +21,15 @@
 //   5. Em EmailJS > Account > Security, restringir os domínios permitidos
 //      ao endereço do site publicado (e a localhost, se quiser testar).
 //
-// Enquanto os valores abaixo estiverem com "COLOQUE_AQUI", o envio de
+// (Chaves já configuradas. Se algum valor voltar a ficar com "COLOQUE_AQUI", o envio de
 // e-mail fica desativado automaticamente (mas o aviso dentro da
 // plataforma continua funcionando normalmente).
 
 import emailjs from '@emailjs/browser'
 
-const EMAILJS_SERVICE_ID = 'COLOQUE_AQUI_SEU_SERVICE_ID'
-const EMAILJS_TEMPLATE_ID = 'COLOQUE_AQUI_SEU_TEMPLATE_ID'
-const EMAILJS_PUBLIC_KEY = 'COLOQUE_AQUI_SUA_PUBLIC_KEY'
+const EMAILJS_SERVICE_ID = 'service_opnxvbl'
+const EMAILJS_TEMPLATE_ID = 'template_tph7ac3'
+const EMAILJS_PUBLIC_KEY = 'YGagrUcjxnRyyrGl2'
 
 const configurado =
   !EMAILJS_SERVICE_ID.startsWith('COLOQUE_AQUI') &&
