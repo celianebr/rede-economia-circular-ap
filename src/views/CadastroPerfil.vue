@@ -70,6 +70,19 @@
               </div>
             </div>
 
+            <div class="consent-box">
+              <p class="consent-title">Contato no perfil público</p>
+              <p class="consent-hint">Por padrão, telefone e e-mail não aparecem para o público. Marque só o que você autoriza exibir.</p>
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="form.compartilharTelefone" />
+                Autorizo exibir meu telefone / WhatsApp no perfil público
+              </label>
+              <label class="checkbox-item">
+                <input type="checkbox" v-model="form.compartilharEmail" />
+                Autorizo exibir meu e-mail no perfil público
+              </label>
+            </div>
+
             <div class="actions">
               <button type="button" class="btn" @click="saveStep1" :disabled="saving">
                 {{ saving ? 'Salvando...' : 'Continuar' }}
@@ -215,6 +228,8 @@ const form = ref({
   ocupacao: '',
   areasAtuacao: [],
   materiaisTrabalhados: [],
+  compartilharTelefone: false,
+  compartilharEmail: false,
 })
 
 const isPJ = computed(() => form.value.tipoCadastro === 'PJ')
@@ -272,6 +287,9 @@ async function saveStep1() {
       municipio: form.value.municipio,
       municipios: [form.value.municipio],
       ocupacao: form.value.ocupacao,
+      email: form.value.email || getAuth().currentUser?.email || '',
+      compartilharTelefone: !!form.value.compartilharTelefone,
+      compartilharEmail: !!form.value.compartilharEmail,
       termoAceite: true,
     })
     goToStep(2)
@@ -377,6 +395,9 @@ async function handleLogout() {
 
 .field { display: flex; flex-direction: column; gap: 6px; }
 .field-label { font-size: 13.5px; font-weight: 600; color: var(--color-text); }
+.consent-box { display: flex; flex-direction: column; gap: 8px; background: var(--color-bg); border: 1px solid var(--color-border); border-radius: 10px; padding: 14px 16px; margin-top: 6px; }
+.consent-title { margin: 0; font-weight: 600; font-size: 13.5px; color: var(--color-text); }
+.consent-hint { margin: 0; font-size: 12px; color: var(--color-text-3); }
 .field-row { display: flex; gap: 16px; flex-wrap: wrap; }
 .field-row .field { flex: 1; min-width: 180px; }
 .field label { font-size: 13.5px; font-weight: 600; color: var(--color-text); }

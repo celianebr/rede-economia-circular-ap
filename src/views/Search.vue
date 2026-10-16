@@ -114,7 +114,10 @@
 
         <div v-else class="result-list">
           <div v-for="r in filteredResults" :key="r.id" class="result-card" @click="router.push('/u/' + r.id)">
-            <div class="result-icon" :style="{ background: tipoColor(classifyTipo(r)) + '1f' }"></div>
+            <div class="result-icon" :style="{ background: tipoColor(classifyTipo(r)) + '1f', color: tipoColor(classifyTipo(r)) }">
+              <img v-if="r.fotoPerfil" :src="r.fotoPerfil" alt="" class="result-photo" />
+              <span v-else class="result-initials">{{ initials(r) }}</span>
+            </div>
             <div class="result-body">
               <div class="result-top">
                 <span class="result-name">{{ r.nome || r.nomeFantasia || 'Usuário sem nome' }}</span>
@@ -124,9 +127,15 @@
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B6558" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
                 {{ r.municipio || (r.municipios && r.municipios[0]) || 'Município não informado' }}
               </div>
-              <div v-if="resultTags(r).length" class="result-tags">
-                <span v-for="(tag, i) in resultTags(r).slice(0, 2)" :key="i" class="mini-tag">{{ tag }}</span>
-                <span v-if="resultTags(r).length > 2" class="mini-tag">+{{ resultTags(r).length - 2 }}</span>
+              <div v-if="(r.areasAtuacao || []).length" class="result-tags">
+                <span class="tag-label">Atuação:</span>
+                <span v-for="(tag, i) in r.areasAtuacao.slice(0, 2)" :key="'a' + i" class="mini-tag">{{ tag }}</span>
+                <span v-if="r.areasAtuacao.length > 2" class="mini-tag">+{{ r.areasAtuacao.length - 2 }}</span>
+              </div>
+              <div v-if="(r.materiaisTrabalhados || []).length" class="result-tags">
+                <span class="tag-label">Materiais:</span>
+                <span v-for="(tag, i) in r.materiaisTrabalhados.slice(0, 2)" :key="'m' + i" class="mini-tag mini-tag-mat">{{ tag }}</span>
+                <span v-if="r.materiaisTrabalhados.length > 2" class="mini-tag mini-tag-mat">+{{ r.materiaisTrabalhados.length - 2 }}</span>
               </div>
             </div>
             <router-link :to="'/u/' + r.id" class="ver-link" @click.stop>Ver →</router-link>
@@ -138,16 +147,30 @@
       <div class="map-panel">
         <div class="map-title">Onde estão os agentes</div>
 
-        <svg width="270" height="310" viewBox="0 0 400 460" xmlns="http://www.w3.org/2000/svg">
-          <path d="M150 10 L200 25 L225 80 L290 70 L330 150 L295 195 L340 240 L320 310 L270 325 L255 385 L200 410 L175 355 L135 365 L105 310 L120 250 L85 200 L105 140 L75 95 L115 55 Z" fill="#2F5D3A"></path>
-          <path d="M200 25 L290 70 L330 150 L295 195 L250 140 L210 80 Z" fill="#FFFFFF" opacity="0.12"></path>
-          <path d="M105 310 L120 250 L175 355 L135 365 Z" fill="#000000" opacity="0.10"></path>
-
-          <g v-for="pin in mapPins" :key="pin.key" :transform="`translate(${pin.x},${pin.y})`">
-            <path d="M0,0 C-6.6,0 -12,-5.2 -12,-11.6 C-12,-20.3 0,-32 0,-32 C0,-32 12,-20.3 12,-11.6 C12,-5.2 6.6,0 0,0 Z" :fill="pin.color"></path>
-            <circle cx="0" cy="-11.6" r="5" fill="#FFFFFF"></circle>
-          </g>
-        </svg>
+        <div class="map-frame">
+          <LMap
+            :zoom="6"
+            :center="[1.3, -51.6]"
+            :use-global-leaflet="false"
+            :options="{ scrollWheelZoom: false }"
+          >
+            <LTileLayer
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+              attribution="&copy; OpenStreetMap"
+              layer-type="base"
+              name="OpenStreetMap"
+            />
+            <LMarker
+              v-for="pin in mapPins"
+              :key="pin.key"
+              :lat-lng="[pin.lat, pin.lng]"
+              :icon="pin.icon"
+              @click="router.push('/u/' + pin.key)"
+            >
+              <LTooltip>{{ pin.nome }}</LTooltip>
+            </LMarker>
+          </LMap>
+        </div>
 
         <div class="legend">
           <span class="legend-item"><span class="dot" style="background:#2F5D3A;"></span>Catador(a)</span>
@@ -169,6 +192,9 @@ import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { collection, getDocs } from 'firebase/firestore'
 import { auth, db } from '../services/firebase.js'
 import { profileOptions } from '../data/profileOptions.js'
+import 'leaflet/dist/leaflet.css'
+import L from 'leaflet'
+import { LMap, LTileLayer, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
 
 const router = useRouter()
 
@@ -321,25 +347,33 @@ function removeTag(tag) {
   toggleFilter(tag.kind, tag.value)
 }
 
-// Coordenadas aproximadas (no viewBox 400x460 do SVG) dos 16 municípios do
-// Amapá, projetadas a partir da latitude/longitude real de cada um.
+// Coordenadas reais (latitude, longitude) das sedes dos 16 municípios do Amapá.
 const municipioCoords = {
-  'Amapá': [308, 165],
-  'Calçoene': [288, 131],
-  'Cutias': [307, 246],
-  'Ferreira Gomes': [260, 255],
-  'Itaubal': [315, 274],
-  'Laranjal do Jari': [90, 383],
-  'Macapá': [273, 317],
-  'Mazagão': [246, 328],
-  'Oiapoque': [178, 30],
-  'Pedra Branca do Amapari': [163, 261],
-  'Porto Grande': [230, 266],
-  'Pracuúba': [308, 188],
-  'Santana': [259, 324],
-  'Serra do Navio': [157, 251],
-  'Tartarugalzinho': [293, 206],
-  'Vitória do Jari': [104, 390],
+  'Amapá': [2.05, -50.80],
+  'Calçoene': [2.50, -50.95],
+  'Cutias': [0.97, -50.80],
+  'Ferreira Gomes': [0.86, -51.18],
+  'Itaubal': [0.60, -50.70],
+  'Laranjal do Jari': [-0.80, -52.46],
+  'Macapá': [0.034, -51.07],
+  'Mazagão': [-0.12, -51.29],
+  'Oiapoque': [3.84, -51.83],
+  'Pedra Branca do Amapari': [0.78, -51.95],
+  'Porto Grande': [0.71, -51.41],
+  'Pracuúba': [1.73, -50.79],
+  'Santana': [-0.06, -51.18],
+  'Serra do Navio': [0.90, -52.00],
+  'Tartarugalzinho': [1.51, -50.91],
+  'Vitória do Jari': [-0.94, -52.42],
+}
+
+function pinIcon(color) {
+  return L.divIcon({
+    className: 'agent-pin',
+    html: `<svg width="26" height="34" viewBox="-13 -34 26 36" xmlns="http://www.w3.org/2000/svg"><path d="M0,0 C-6.6,0 -12,-5.2 -12,-11.6 C-12,-20.3 0,-32 0,-32 C0,-32 12,-20.3 12,-11.6 C12,-5.2 6.6,0 0,0 Z" fill="${color}" stroke="#FFFFFF" stroke-width="1.5"></path><circle cx="0" cy="-11.6" r="5" fill="#FFFFFF"></circle></svg>`,
+    iconSize: [26, 34],
+    iconAnchor: [13, 34],
+  })
 }
 
 const mapPins = computed(() => {
@@ -353,16 +387,23 @@ const mapPins = computed(() => {
     perCity[city] = n + 1
     // pequeno deslocamento em espiral para não empilhar pins exatamente no mesmo ponto
     const angle = n * 2.4
-    const radius = n === 0 ? 0 : 6 + n * 3
+    const radius = n === 0 ? 0 : 0.02 + n * 0.012
     pins.push({
       key: r.id,
-      x: base[0] + Math.cos(angle) * radius,
-      y: base[1] + Math.sin(angle) * radius,
-      color: tipoColor(classifyTipo(r)),
+      nome: r.nome || r.nomeFantasia || 'Agente',
+      lat: base[0] + Math.sin(angle) * radius,
+      lng: base[1] + Math.cos(angle) * radius,
+      icon: pinIcon(tipoColor(classifyTipo(r))),
     })
   })
   return pins
 })
+
+function initials(r) {
+  const name = (r.nome || r.nomeFantasia || '?').trim()
+  const parts = name.split(/\s+/).filter(Boolean)
+  return ((parts[0] || '?')[0] + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase()
+}
 
 onMounted(() => {
   loadResults()
@@ -377,6 +418,10 @@ async function handleLogout() {
   router.push('/login')
 }
 </script>
+
+<style>
+.agent-pin { background: none; border: none; }
+</style>
 
 <style scoped>
 .page { display: flex; flex-direction: column; min-height: 100vh; }
@@ -488,7 +533,11 @@ async function handleLogout() {
   transition: box-shadow 0.15s ease;
 }
 .result-card:hover { box-shadow: 0 2px 10px rgba(28,27,23,0.06); }
-.result-icon { width: 38px; height: 38px; border-radius: 10px; flex-shrink: 0; }
+.result-icon { width: 44px; height: 44px; border-radius: 10px; flex-shrink: 0; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+.result-photo { width: 100%; height: 100%; object-fit: cover; }
+.result-initials { font-weight: 700; font-size: 14px; }
+.tag-label { font-size: 11px; color: var(--color-text-3); align-self: center; }
+.mini-tag-mat { background: #E4ECE6; color: var(--color-accent); }
 .result-body { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .result-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .result-name { font-weight: 700; font-size: 14px; color: var(--color-text); }
@@ -511,6 +560,7 @@ async function handleLogout() {
   align-items: center;
   height: fit-content;
 }
+.map-frame { width: 100%; height: 380px; border-radius: 10px; overflow: hidden; border: 1px solid var(--color-border); }
 .map-title { align-self: flex-start; font-weight: 600; font-size: 14px; color: var(--color-text); }
 .legend { display: flex; flex-wrap: wrap; gap: 10px 14px; justify-content: center; align-self: stretch; padding-top: 12px; border-top: 1px solid var(--color-border); }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 11.5px; color: var(--color-text-2); }

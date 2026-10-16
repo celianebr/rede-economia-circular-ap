@@ -296,6 +296,21 @@
 
     </div>
 
+    <div class="my-6 bg-gray-50 p-4 rounded border space-y-3">
+      <p class="text-sm font-semibold text-gray-700">Contato no perfil público</p>
+      <p class="text-xs text-gray-500">
+        Por padrão, seu telefone e e-mail <strong>não</strong> aparecem no perfil público. Marque abaixo apenas o que você autoriza exibir.
+      </p>
+      <label class="flex items-start gap-2">
+        <input type="checkbox" v-model="form.compartilharTelefone" class="mt-1" />
+        <span class="text-sm text-gray-700">Autorizo exibir meu telefone / WhatsApp no perfil público.</span>
+      </label>
+      <label class="flex items-start gap-2">
+        <input type="checkbox" v-model="form.compartilharEmail" class="mt-1" />
+        <span class="text-sm text-gray-700">Autorizo exibir meu e-mail no perfil público.</span>
+      </label>
+    </div>
+
     <div class="my-6 bg-gray-50 p-4 rounded border">
       <label class="flex items-start gap-2">
         <input type="checkbox" v-model="form.termoAceite" class="mt-1" />
@@ -314,13 +329,24 @@
       <button class="text-lz-primary underline text-sm" @click="$router.push('/u/' + userId)">
         Visualizar Perfil Público
       </button>
+
+      <button
+        type="button"
+        class="text-sm text-red-600 underline md:ml-auto"
+        @click="excluir"
+        :disabled="excluindo"
+      >
+        {{ excluindo ? "Excluindo..." : "Excluir meu perfil" }}
+      </button>
     </div>
   </div>
 </template>
 
 <script setup>
 import { ref, watch, computed } from "vue";
-import { salvarPerfil } from "../services/firestoreService.js";
+import { useRouter } from "vue-router";
+import { getAuth, deleteUser, signOut } from "firebase/auth";
+import { salvarPerfil, excluirPerfil } from "../services/firestoreService.js";
 import { profileOptions } from "../data/profileOptions.js";
 
 const props = defineProps({
@@ -376,10 +402,15 @@ const form = ref({
   redesSociais: "",
   
   // Termos
-  termoAceite: false
+  termoAceite: false,
+  // Contato só aparece no perfil público com autorização explícita
+  compartilharTelefone: false,
+  compartilharEmail: false,
 });
 
 const loading = ref(false);
+const excluindo = ref(false);
+const router = useRouter();
 
 const isPF = computed(() => form.value.tipoCadastro === 'PF');
 const isPJ = computed(() => form.value.tipoCadastro === 'PJ');
@@ -463,6 +494,36 @@ async function salvar() {
     alert("Erro ao salvar perfil: " + (err.message || err));
   } finally {
     loading.value = false;
+  }
+}
+
+async function excluir() {
+  if (!props.userId) return;
+  const ok = window.confirm(
+    "Tem certeza que deseja excluir seu perfil? Seus dados serão removidos do mapa e essa ação não pode ser desfeita."
+  );
+  if (!ok) return;
+
+  excluindo.value = true;
+  try {
+    await excluirPerfil(props.userId);
+
+    // Tenta remover também a conta de acesso. Se o login for antigo demais,
+    // o Firebase pede novo login; nesse caso o perfil já foi apagado e
+    // apenas encerramos a sessão.
+    const auth = getAuth();
+    try {
+      if (auth.currentUser) await deleteUser(auth.currentUser);
+    } catch (e) {
+      await signOut(auth);
+    }
+
+    alert("Seu perfil foi excluído.");
+    router.push("/");
+  } catch (err) {
+    alert("Não foi possível excluir o perfil: " + (err.message || err));
+  } finally {
+    excluindo.value = false;
   }
 }
 

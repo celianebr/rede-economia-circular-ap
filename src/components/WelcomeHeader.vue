@@ -2,13 +2,16 @@
   <header class="site-header">
     <div class="header-inner">
       <router-link to="/" class="brand">
-        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+        <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
           <path d="M17.5 6.5a7.5 7.5 0 0 0-11.9 1.9"></path>
           <path d="M4 4v4h4"></path>
           <path d="M6.5 17.5a7.5 7.5 0 0 0 11.9-1.9"></path>
           <path d="M20 20v-4h-4"></path>
         </svg>
-        <span class="brand-title">Rede de Agentes</span>
+        <span class="brand-text">
+          <span class="brand-title">Mapa dos Agentes da Economia Circular do Amapá</span>
+          <span class="brand-subtitle">Instituto Movimento Lixo Zero Amapá</span>
+        </span>
       </router-link>
 
       <nav class="nav">
@@ -40,7 +43,7 @@ function isActive(path) {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 22px 64px;
+  padding: 18px 64px;
   max-width: 1440px;
   margin: 0 auto;
   gap: 16px;
@@ -52,11 +55,22 @@ function isActive(path) {
   gap: 12px;
   text-decoration: none;
 }
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.25;
+}
 .brand-title {
   font-family: var(--font-display);
   font-weight: 700;
-  font-size: 16px;
+  font-size: 26px;
+  line-height: 1.2;
   color: var(--color-text);
+}
+.brand-subtitle {
+  font-family: var(--font-sans);
+  font-size: 15px;
+  color: var(--color-text-3);
 }
 .nav {
   display: flex;
@@ -78,7 +92,24 @@ function isActive(path) {
 .nav-link.active { font-weight: 700; color: var(--color-accent); }
 
 @media (max-width: 640px) {
-  .header-inner { padding: 16px 20px; }
-  .nav { gap: 18px; }
+  .header-inner {
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 20px;
+    gap: 12px;
+  }
+  .brand {
+    flex-direction: column;
+    text-align: center;
+    gap: 6px;
+  }
+  .brand-title { font-size: 18px; }
+  .brand-subtitle { font-size: 12.5px; }
+  .nav {
+    width: 100%;
+    justify-content: space-between;
+    gap: 12px;
+    flex-wrap: wrap;
+  }
 }
 </style>

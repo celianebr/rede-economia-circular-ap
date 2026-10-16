@@ -35,7 +35,7 @@
               <span class="px-3 py-1 bg-white border border-primary text-primary rounded-full text-sm font-semibold">
                 {{ profile.tipoCadastro === 'PJ' ? 'Pessoa Jurídica' : 'Pessoa Física' }}
               </span>
-              <span v-if="profile.municipio" class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
+              <span v-if="profile.municipio && !(profile.municipios || []).includes(profile.municipio)" class="px-3 py-1 bg-gray-100 text-gray-600 rounded-full text-sm">
                 {{ profile.municipio }}
               </span>
                <!-- Array Municipios Support -->
@@ -79,14 +79,14 @@
           <div>
             <h2 class="text-xl font-bold text-primary mb-4 border-b pb-2">Contato</h2>
             <ul class="space-y-3 text-gray-700">
-               <li v-if="profile.email || profile.emailInstitucional">
+               <li v-if="profile.compartilharEmail && (profile.email || profile.emailInstitucional)">
                  <span class="font-semibold block text-sm text-gray-500">E-mail:</span>
                  <a :href="'mailto:'+(profile.email || profile.emailInstitucional)" class="text-primary hover:underline">
                    {{ profile.email || profile.emailInstitucional }}
                  </a>
                </li>
                
-               <li v-if="profile.telefone">
+               <li v-if="profile.compartilharTelefone && profile.telefone">
                  <span class="font-semibold block text-sm text-gray-500">Telefone / WhatsApp:</span>
                  <a :href="'https://wa.me/55'+profile.telefone.replace(/\D/g, '')" target="_blank" class="text-primary hover:underline">
                    {{ profile.telefone }}
@@ -103,6 +103,10 @@
                  <a :href="profile.site.startsWith('http') ? profile.site : 'https://'+profile.site" target="_blank" class="text-primary hover:underline">
                     {{ profile.site }}
                  </a>
+               </li>
+
+               <li v-if="!profile.compartilharEmail && !profile.compartilharTelefone && !profile.redesSociais && !profile.site" class="text-sm text-gray-400 italic">
+                 Este agente não disponibilizou contato público.
                </li>
             </ul>
           </div>
