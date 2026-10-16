@@ -28,23 +28,23 @@
   background: #FFFFFF;
   border-top: 1px solid var(--color-border);
   border-bottom: 1px solid var(--color-border);
-  padding: 36px 64px;
+  padding: 22px 64px;
 }
 .how-inner {
   max-width: 1312px;
   margin: 0 auto;
 }
 .how h2 {
-  margin: 0 0 22px 0;
+  margin: 0 0 14px 0;
   text-align: center;
   font-family: var(--font-display);
   font-weight: 600;
-  font-size: 24px;
+  font-size: 22px;
   color: var(--color-text);
 }
 .cards {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   flex-wrap: wrap;
 }
 .step-card {
@@ -53,10 +53,10 @@
   background: var(--color-bg);
   border: 1px solid var(--color-border);
   border-radius: 12px;
-  padding: 22px;
+  padding: 18px;
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 8px;
 }
 .step-number {
   width: 34px;
@@ -82,6 +82,7 @@
 }
 
 @media (max-width: 640px) {
-  .how { padding: 28px 20px; }
+  .how { padding: 22px 20px; }
+  .step-card { align-items: center; text-align: center; }
 }
 </style>
