@@ -10,5 +10,21 @@ service cloud.firestore {
       // Apenas o usuário dono pode criar, atualizar ou excluir o próprio perfil
       allow create, update, delete: if request.auth != null && request.auth.uid == userId;
     }
+
+    // Coleção de demonstrações de interesse em contato (matchmaking)
+    match /interesses/{interesseId} {
+      // Só o remetente e o destinatário do interesse podem ler, atualizar
+      // (ex: marcar como lido) ou excluir o documento.
+      allow read, update, delete: if request.auth != null
+        && (request.auth.uid == resource.data.paraId || request.auth.uid == resource.data.deId);
+
+      // Só um usuário autenticado pode criar um interesse, e só em nome
+      // dele mesmo (não é possível enviar um interesse "de" outra pessoa),
+      // e não é possível demonstrar interesse em si mesmo.
+      allow create: if request.auth != null
+        && request.auth.uid == request.resource.data.deId
+        && request.resource.data.paraId is string
+        && request.resource.data.deId != request.resource.data.paraId;
+    }
   }
 }

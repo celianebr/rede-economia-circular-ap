@@ -12,6 +12,8 @@
         </p>
       </div>
 
+      <InteressesRecebidos v-if="userId" :userId="userId" />
+
       <ProfileForm :initialProfile="profile" :userId="userId" />
     </main>
   </div>
@@ -22,6 +24,7 @@ import { ref, onMounted } from "vue"
 import { useRouter } from "vue-router"
 import WelcomeHeader from "../components/WelcomeHeader.vue"
 import ProfileForm from "../components/ProfileForm.vue"
+import InteressesRecebidos from "../components/InteressesRecebidos.vue"
 import { salvarPerfil, buscarPerfil } from "../services/firestoreService.js"
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth"
 import { firebaseService as api } from '../services/firebase.js'

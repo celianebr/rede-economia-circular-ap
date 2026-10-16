@@ -131,6 +131,52 @@
              </div>
           </div>
 
+
+          <!-- MATCHMAKING: demonstrar interesse em contato -->
+          <div class="md:col-span-2 border-t pt-6" v-if="!isOwnProfile">
+            <h2 class="text-xl font-bold text-primary mb-3">Interessado(a) em se conectar?</h2>
+
+            <div v-if="!currentUserId" class="text-sm text-gray-600">
+              <router-link to="/login" class="text-primary font-semibold hover:underline">Entre na sua conta</router-link>
+              para demonstrar interesse em contato com este agente.
+            </div>
+
+            <div v-else-if="interesseEnviado" class="text-sm text-green-700 bg-green-50 border border-green-200 rounded px-4 py-3">
+              {{ mensagemConfirmacaoInteresse }}
+            </div>
+
+            <div v-else>
+              <button
+                v-if="!mostrarFormInteresse"
+                type="button"
+                class="btn"
+                @click="mostrarFormInteresse = true"
+              >
+                Tenho interesse em contato
+              </button>
+
+              <div v-else class="max-w-lg">
+                <label class="block text-sm font-medium text-gray-700 mb-1">Mensagem (opcional)</label>
+                <textarea
+                  v-model="mensagemInteresse"
+                  rows="3"
+                  maxlength="500"
+                  placeholder="Conte um pouco sobre por que quer se conectar..."
+                  class="w-full px-3 py-2 rounded border mb-2"
+                ></textarea>
+                <div class="flex gap-3">
+                  <button type="button" class="btn" @click="enviarInteresseHandler" :disabled="enviandoInteresse">
+                    {{ enviandoInteresse ? 'Enviando...' : 'Enviar interesse' }}
+                  </button>
+                  <button type="button" class="text-sm text-gray-500 underline" @click="mostrarFormInteresse = false">
+                    Cancelar
+                  </button>
+                </div>
+                <p v-if="erroInteresse" class="text-sm text-red-600 mt-2">{{ erroInteresse }}</p>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
@@ -138,23 +184,43 @@
 </template>
 
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useRoute } from "vue-router";
-import { buscarPerfil } from "../services/firestoreService";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { buscarPerfil, enviarInteresse } from "../services/firestoreService";
+import { enviarEmailInteresse } from "../services/emailService";
 
 const route = useRoute();
 const profile = ref(null);
 const loading = ref(true);
 
-onMounted(async () => {
+const currentUserId = ref("");
+const currentUserProfile = ref(null);
+const isOwnProfile = computed(() => currentUserId.value && currentUserId.value === route.params.id);
+
+const mostrarFormInteresse = ref(false);
+const mensagemInteresse = ref("");
+const enviandoInteresse = ref(false);
+const interesseEnviado = ref(false);
+const ultimoEnvioComEmail = ref(false);
+const erroInteresse = ref("");
+
+const mensagemConfirmacaoInteresse = computed(() => {
+  const nome = profile.value ? (profile.value.nome || profile.value.nomeFantasia) : "Agente";
+  return ultimoEnvioComEmail.value
+    ? `Interesse enviado! ${nome} vai receber um aviso na plataforma e por e-mail.`
+    : `Interesse enviado! ${nome} vai receber um aviso na plataforma.`;
+});
+
+async function carregarPerfil() {
   const id = route.params.id;
-  if(id) {
+  if (id) {
     try {
       const data = await buscarPerfil(id);
-      if(data) {
+      if (data) {
         profile.value = data;
       }
-    } catch(e) {
+    } catch (e) {
       console.error(e);
     } finally {
       loading.value = false;
@@ -162,6 +228,67 @@ onMounted(async () => {
   } else {
     loading.value = false;
   }
+}
+
+async function enviarInteresseHandler() {
+  if (!currentUserId.value || !profile.value) return;
+  erroInteresse.value = "";
+  enviandoInteresse.value = true;
+  try {
+    const deNome =
+      (currentUserProfile.value && (currentUserProfile.value.nome || currentUserProfile.value.nomeFantasia)) ||
+      "Um agente da rede";
+    const paraNome = profile.value.nome || profile.value.nomeFantasia || "Agente";
+    // O aviso por e-mail é uma notificação interna entre os dois agentes, por isso usa o
+    // e-mail cadastrado mesmo que a pessoa não tenha autorizado exibi-lo no perfil público.
+    const paraEmail = profile.value.email || profile.value.emailInstitucional || "";
+    const deEmail =
+      (currentUserProfile.value && (currentUserProfile.value.email || currentUserProfile.value.emailInstitucional)) ||
+      "";
+
+    await enviarInteresse({
+      deId: currentUserId.value,
+      deNome,
+      paraId: route.params.id,
+      paraNome,
+      mensagem: mensagemInteresse.value.trim(),
+    });
+
+    const resultadoEmail = await enviarEmailInteresse({
+      toEmail: paraEmail,
+      toName: paraNome,
+      fromName: deNome,
+      message: mensagemInteresse.value.trim(),
+      profileUrl: `${window.location.origin}/u/${currentUserId.value}`,
+      replyTo: deEmail,
+    });
+
+    ultimoEnvioComEmail.value = !!resultadoEmail.enviado;
+    interesseEnviado.value = true;
+  } catch (err) {
+    console.error("Erro ao enviar interesse:", err);
+    erroInteresse.value = "Não foi possível enviar seu interesse agora. Tente novamente em instantes.";
+  } finally {
+    enviandoInteresse.value = false;
+  }
+}
+
+onMounted(() => {
+  carregarPerfil();
+
+  const auth = getAuth();
+  onAuthStateChanged(auth, async (u) => {
+    currentUserId.value = u ? u.uid : "";
+    if (u) {
+      try {
+        currentUserProfile.value = await buscarPerfil(u.uid);
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      currentUserProfile.value = null;
+    }
+  });
 });
 </script>
 
