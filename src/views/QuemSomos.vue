@@ -6,31 +6,68 @@
       <div class="intro-inner">
         <h1>Quem somos</h1>
         <p>
-          [Texto sobre a história e a missão do Instituto Movimento Lixo Zero Amapá —
-          quando a iniciativa nasceu, o que a motivou e o que ela busca transformar na
-          gestão de resíduos e na economia circular do estado.]
+          O Instituto Movimento Lixo Zero Amapá (IMOLIZEAP) é uma associação de direito
+          privado, sem fins lucrativos e de caráter socioambiental. Nasceu em 2020 da
+          vontade de mudar a forma como o Amapá lida com os resíduos, tratando-os como
+          recursos que podem voltar à cadeia produtiva, e não como algo a ser descartado.
+        </p>
+        <p>
+          Nossa atuação se baseia no conceito Lixo Zero, uma meta ética, econômica e
+          eficiente que convida pessoas, empresas e governos a repensar seus modos de
+          vida e de produção. Numa gestão Lixo Zero, recicláveis, orgânicos e rejeitos
+          não se misturam, e o desperdício de materiais em aterros diminui.
+        </p>
+        <p>
+          Trabalhamos com educação ambiental, mobilização social e soluções sustentáveis.
+          Aproximamos sociedade, poder público e setor produtivo em torno da economia
+          circular, com o objetivo de tornar o Amapá referência nacional em
+          sustentabilidade, com um futuro limpo e responsável para as gerações de hoje e
+          de amanhã.
         </p>
       </div>
 
       <div class="pillars">
         <div class="pillar-card">
           <div class="pillar-title">Missão</div>
-          <div class="pillar-desc">[Descrição da missão do Instituto]</div>
+          <div class="pillar-desc">
+            Promover a gestão eficiente dos resíduos e o consumo consciente, com foco nas
+            dimensões ambiental, social e econômica, disseminando o conceito Lixo Zero em
+            todo o estado do Amapá.
+          </div>
         </div>
         <div class="pillar-card">
           <div class="pillar-title">Visão</div>
-          <div class="pillar-desc">[Descrição da visão do Instituto]</div>
+          <div class="pillar-desc">
+            Ser referência estadual em sustentabilidade e economia circular, unindo
+            sociedade, empresas e governo em torno de um Amapá sem desperdício.
+          </div>
         </div>
-        <div class="pillar-card">
-          <div class="pillar-title">Valores</div>
-          <div class="pillar-desc">[Valores que orientam a atuação]</div>
-        </div>
+      </div>
+
+      <div class="pillar-card values-card">
+        <div class="pillar-title">Valores</div>
+        <ul class="values-list">
+          <li><strong>Sustentabilidade:</strong> cada ação considera o equilíbrio entre meio ambiente, sociedade e economia.</li>
+          <li><strong>Consciência ambiental:</strong> educar e sensibilizar para mudar hábitos e cultura.</li>
+          <li><strong>Ética:</strong> transparência e responsabilidade em tudo o que fazemos.</li>
+          <li><strong>Cooperação:</strong> redes e parcerias fortalecem a transformação coletiva.</li>
+          <li><strong>Educação e inclusão social:</strong> valorização e capacitação de catadores e comunidades.</li>
+        </ul>
       </div>
 
       <div class="partners">
         <div class="partners-title">Parceiros</div>
         <div class="partners-grid">
-          <div v-for="n in 5" :key="n" class="partner-slot">[Logo do parceiro]</div>
+          <div class="partner-slot">
+            <img
+              v-if="!logoFalhou"
+              :src="logoSrc"
+              alt="UNIFAP Digital"
+              class="partner-logo"
+              @error="logoFalhou = true"
+            />
+            <span v-else class="partner-fallback">UNIFAP Digital</span>
+          </div>
         </div>
       </div>
     </section>
@@ -44,46 +81,16 @@
         </p>
 
         <div class="contact-rows">
-          <div class="contact-row">
+          <a class="contact-row" href="mailto:lixozeroamapa@gmail.com">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16v16H4z"></path><path d="M4 6l8 7 8-7"></path></svg>
-            <span>[contato@imolizeap.org.br]</span>
-          </div>
-          <div class="contact-row">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3 19.5 19.5 0 0 1-6-6 19.8 19.8 0 0 1-3-8.7A2 2 0 0 1 4.2 2h3a2 2 0 0 1 2 1.7c.1 1 .3 2 .6 3a2 2 0 0 1-.5 2.1L8 10a16 16 0 0 0 6 6l1.2-1.3a2 2 0 0 1 2.1-.5c1 .3 2 .5 3 .6a2 2 0 0 1 1.7 2.1z"></path></svg>
-            <span>[(96) 0000-0000]</span>
-          </div>
-          <div class="contact-row align-start">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-top:1px;"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
-            <span>[Endereço da sede — Macapá, AP]</span>
-          </div>
-        </div>
-
-        <div class="social-row">
-          <a href="#" class="social-icon" aria-label="Instagram">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="#2F5D3A"></circle></svg>
+            <span>lixozeroamapa@gmail.com</span>
           </a>
-          <a href="#" class="social-icon" aria-label="Facebook">
-            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 2h-3a5 5 0 0 0-5 5v3H7v4h3v8h4v-8h3l1-4h-4V7a1 1 0 0 1 1-1h3z"></path></svg>
+          <a class="contact-row" href="https://www.instagram.com/lixozero.ap" target="_blank" rel="noopener">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#2F5D3A" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"></rect><circle cx="12" cy="12" r="4"></circle><circle cx="17.5" cy="6.5" r="0.8" fill="#2F5D3A"></circle></svg>
+            <span>@lixozero.ap</span>
           </a>
         </div>
       </div>
-
-      <form class="contact-form" @submit.prevent="submitContact">
-        <div class="field">
-          <label for="cnome">Nome</label>
-          <input id="cnome" v-model="contact.nome" type="text" placeholder="Seu nome" required />
-        </div>
-        <div class="field">
-          <label for="cemail">E-mail</label>
-          <input id="cemail" v-model="contact.email" type="email" placeholder="voce@exemplo.com" required />
-        </div>
-        <div class="field">
-          <label for="cmsg">Mensagem</label>
-          <textarea id="cmsg" v-model="contact.mensagem" rows="4" placeholder="Como podemos ajudar?" required></textarea>
-        </div>
-        <button type="submit" class="btn send-btn">Enviar mensagem</button>
-        <p v-if="sent" class="sent-msg">Mensagem enviada! Em breve entraremos em contato.</p>
-      </form>
     </section>
 
     <Footer :show-link="false" />
@@ -95,14 +102,9 @@ import { ref } from 'vue'
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
 
-const contact = ref({ nome: '', email: '', mensagem: '' })
-const sent = ref(false)
-
-function submitContact() {
-  // TODO: ligar a um serviço real de envio (e-mail/Firestore) quando definido.
-  sent.value = true
-  contact.value = { nome: '', email: '', mensagem: '' }
-}
+// Se o arquivo da logo ainda não estiver em public/parceiros/, mostra o nome em texto.
+const logoSrc = '/parceiros/unifap-digital.png'
+const logoFalhou = ref(false)
 </script>
 
 <style scoped>
@@ -151,8 +153,7 @@ function submitContact() {
 .partners-title { font-weight: 600; font-size: 18px; color: var(--color-text); font-family: var(--font-display); }
 .partners-grid { display: flex; gap: 16px; flex-wrap: wrap; }
 .partner-slot {
-  flex: 1;
-  min-width: 120px;
+  width: 220px;
   height: 76px;
   background: #FFFFFF;
   border: 1px dashed var(--color-border-2);
@@ -187,45 +188,19 @@ function submitContact() {
 }
 .contact-info > p { margin: 0; font-size: 14.5px; line-height: 1.6; color: var(--color-text-3); }
 .contact-rows { display: flex; flex-direction: column; gap: 16px; margin-top: 8px; }
-.contact-row { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--color-text); }
+.contact-row { display: flex; align-items: center; gap: 12px; font-size: 14px; color: var(--color-text); text-decoration: none; }
+a.contact-row:hover span { text-decoration: underline; }
 .contact-row.align-start { align-items: flex-start; line-height: 1.4; }
-.social-row { display: flex; gap: 10px; margin-top: 8px; }
-.social-icon {
-  width: 38px;
-  height: 38px;
-  border-radius: 999px;
-  background: rgba(47, 93, 58, 0.12);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
 
-.contact-form {
-  flex: 1;
-  min-width: 280px;
-  background: #FFFFFF;
-  border: 1px solid var(--color-border);
-  border-radius: 16px;
-  padding: 32px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  max-width: 520px;
-  box-sizing: border-box;
+.values-card { flex: none; }
+.values-list { margin: 4px 0 0 0; padding-left: 18px; display: flex; flex-direction: column; gap: 8px; font-size: 13.5px; line-height: 1.55; color: var(--color-text-3); }
+.values-list strong { color: var(--color-text); }
+
+.partner-slot {
+  border-style: solid;
 }
-.field { display: flex; flex-direction: column; gap: 6px; }
-.field label { font-size: 13.5px; font-weight: 600; color: var(--color-text); }
-.field input,
-.field textarea {
-  padding: 12px 14px;
-  border: 1px solid var(--color-border-2);
-  border-radius: 8px;
-  background: var(--color-bg);
-  font-size: 14px;
-  resize: none;
-}
-.send-btn { align-self: flex-start; padding: 13px 30px; font-size: 15px; }
-.sent-msg { margin: 0; font-size: 13px; color: var(--color-accent); font-weight: 600; }
+.partner-logo { max-width: 100%; max-height: 52px; object-fit: contain; }
+.partner-fallback { font-family: var(--font-display); font-weight: 700; font-size: 15px; color: var(--color-text-2); }
 
 @media (max-width: 640px) {
   .intro, .contact { padding: 32px 20px; }
