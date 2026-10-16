@@ -7,6 +7,7 @@ import Profile from '../views/Profile.vue'
 import Search from '../views/Search.vue'
 import PublicProfile from '../views/PublicProfile.vue'
 import QuemSomos from '../views/QuemSomos.vue'
+import Relatorio from '../views/Relatorio.vue'
 import { auth } from '../firebase'
 import { onAuthStateChanged } from 'firebase/auth'
 
@@ -18,7 +19,8 @@ const routes = [
   { path: '/profile', component: Profile, meta: { requiresAuth: true } },
   { path: '/search', component: Search },
   { path: '/u/:id', component: PublicProfile },
-  { path: '/quem-somos', component: QuemSomos }
+  { path: '/quem-somos', component: QuemSomos },
+  { path: '/relatorio', component: Relatorio },
 ]
 
 const router = createRouter({

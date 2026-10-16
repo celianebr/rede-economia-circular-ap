@@ -17,6 +17,12 @@
       <nav class="nav">
         <router-link
           v-if="showNav"
+          to="/relatorio"
+          class="nav-link"
+          :class="{ active: route.path === '/relatorio' }"
+        >Relatório</router-link>
+        <router-link
+          v-if="showNav"
           to="/quem-somos"
           class="nav-link"
           :class="{ active: route.path === '/quem-somos' }"

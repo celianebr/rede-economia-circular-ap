@@ -4,6 +4,7 @@
       © {{ year }} Instituto Movimento Lixo Zero do Amapá — IMOLIZEAP
       <template v-if="showLink">
         · <router-link to="/quem-somos">Quem somos e contato</router-link>
+        · <router-link to="/relatorio">Relatório da rede</router-link>
       </template>
     </span>
   </footer>

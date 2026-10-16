@@ -17,6 +17,7 @@
       <nav class="nav">
         <router-link to="/profile" class="nav-link" :class="{ active: isActive('/profile') }">Meu Perfil</router-link>
         <router-link to="/search" class="nav-link" :class="{ active: isActive('/search') }">Pesquisar membros</router-link>
+        <router-link to="/relatorio" class="nav-link" :class="{ active: isActive('/relatorio') }">Relatório</router-link>
         <button type="button" class="nav-link nav-button" @click="$emit('logout')">Sair</button>
       </nav>
     </div>
