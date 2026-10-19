@@ -208,6 +208,7 @@ import { auth, db } from '../services/firebase.js'
 import WelcomeHeader from '../components/WelcomeHeader.vue'
 import Header from '../components/Header.vue'
 import Footer from '../components/Footer.vue'
+import { TIPOS, tipoColor, classifyTipo } from '../utils/tipoPerfil.js'
 
 const router = useRouter()
 
@@ -217,34 +218,15 @@ const erro = ref('')
 const agentes = ref([])
 const isAuthenticated = ref(false)
 
-const TIPOS = ['Catador(a)', 'Cooperativa', 'Empresa', 'Pesquisador(a)']
-const TIPO_COLORS = {
-  'Catador(a)': '#2F5D3A',
-  'Cooperativa': '#B9622E',
-  'Empresa': '#3B5A73',
-  'Pesquisador(a)': '#6B4E8E',
-}
 // Plural em português usado na frase do panorama geral
 const TIPO_PLURAL = {
   'Catador(a)': ['catador(a)', 'catadores(as)'],
   'Cooperativa': ['cooperativa', 'cooperativas'],
   'Empresa': ['empresa', 'empresas'],
   'Pesquisador(a)': ['pesquisador(a)', 'pesquisadores(as)'],
+  'Outros': ['agente de outro perfil', 'agentes de outros perfis'],
 }
 
-function tipoColor(tipo) { return TIPO_COLORS[tipo] || TIPO_COLORS['Catador(a)'] }
-
-// Mesma regra usada na página de Pesquisa para derivar o "tipo de perfil".
-function classifyTipo(p) {
-  const occ = (p.ocupacao || '').toLowerCase()
-  const org = (p.tipoOrganizacao || '').toLowerCase()
-  if (occ.includes('pesquisad') || occ.includes('extensionista')) return 'Pesquisador(a)'
-  if (org.includes('cooperativa') || occ.includes('cooperativa')) return 'Cooperativa'
-  if (p.tipoCadastro === 'PJ' || org.includes('empresa') || org.includes('órgão') || org.includes('associa')) {
-    return org.includes('cooperativa') ? 'Cooperativa' : 'Empresa'
-  }
-  return 'Catador(a)'
-}
 
 function primeiroMunicipio(p) {
   if (p.municipios && p.municipios.length) return p.municipios[0]
@@ -269,6 +251,7 @@ const tipoCounts = computed(() => {
 
 const tiposOrdenados = computed(() => {
   const lista = TIPOS.map((nome) => ({ nome, qtd: tipoCounts.value[nome] || 0 }))
+    .filter((t) => t.nome !== 'Outros' || t.qtd > 0)
     .sort((a, b) => b.qtd - a.qtd)
   const max = Math.max(1, ...lista.map((t) => t.qtd))
   return lista.map((t) => ({ ...t, pctBarra: (t.qtd / max) * 100 }))

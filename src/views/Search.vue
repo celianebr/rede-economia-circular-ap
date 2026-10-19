@@ -121,7 +121,7 @@
             <div class="result-body">
               <div class="result-top">
                 <span class="result-name">{{ r.nome || r.nomeFantasia || 'Usuário sem nome' }}</span>
-                <span class="result-badge" :style="badgeStyle(classifyTipo(r))">{{ classifyTipo(r) }}</span>
+                <span v-if="rotuloPerfil(r)" class="result-badge" :style="badgeStyle(classifyTipo(r))" :title="rotuloPerfil(r)">{{ rotuloPerfil(r) }}</span>
               </div>
               <div class="result-location">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B6558" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
@@ -177,6 +177,7 @@
           <span class="legend-item"><span class="dot" style="background:#B9622E;"></span>Cooperativa</span>
           <span class="legend-item"><span class="dot" style="background:#3B5A73;"></span>Empresa</span>
           <span class="legend-item"><span class="dot" style="background:#6B4E8E;"></span>Pesquisador(a)</span>
+          <span class="legend-item"><span class="dot" style="background:#7A7466;"></span>Outros</span>
         </div>
       </div>
     </main>
@@ -192,6 +193,7 @@ import { onAuthStateChanged, signOut } from 'firebase/auth'
 import { collection, getDocs } from 'firebase/firestore'
 import { auth, db } from '../services/firebase.js'
 import { profileOptions } from '../data/profileOptions.js'
+import { TIPOS, tipoColor, classifyTipo, rotuloPerfil } from '../utils/tipoPerfil.js'
 import 'leaflet/dist/leaflet.css'
 import L from 'leaflet'
 import { LMap, LTileLayer, LMarker, LTooltip } from '@vue-leaflet/vue-leaflet'
@@ -214,7 +216,7 @@ const visibleMunicipios = computed(() =>
   showAllMunicipios.value ? profileOptions.municipios : profileOptions.municipios.slice(0, 6)
 )
 
-const tiposPerfil = ['Catador(a)', 'Cooperativa', 'Empresa', 'Pesquisador(a)']
+const tiposPerfil = TIPOS
 
 const allResults = ref([])
 const loading = ref(false)
@@ -240,30 +242,9 @@ function clearFilters() {
   filters.material = []
 }
 
-const TIPO_COLORS = {
-  'Catador(a)': '#2F5D3A',
-  'Cooperativa': '#B9622E',
-  'Empresa': '#3B5A73',
-  'Pesquisador(a)': '#6B4E8E',
-}
-function tipoColor(tipo) { return TIPO_COLORS[tipo] || TIPO_COLORS['Catador(a)'] }
 function badgeStyle(tipo) {
   const color = tipoColor(tipo)
   return { background: color + '1f', color }
-}
-
-// Deriva um dos 4 "tipos de perfil" do handoff a partir dos campos reais
-// do cadastro (tipoCadastro / ocupação / tipo de organização).
-function classifyTipo(p) {
-  const occ = (p.ocupacao || '').toLowerCase()
-  const org = (p.tipoOrganizacao || '').toLowerCase()
-  if (occ.includes('pesquisad') || occ.includes('extensionista')) return 'Pesquisador(a)'
-  if (org.includes('cooperativa') || occ.includes('cooperativa')) return 'Cooperativa'
-  if (p.tipoCadastro === 'PJ' || org.includes('empresa') || org.includes('órgão') || org.includes('associa')) {
-    return org.includes('cooperativa') ? 'Cooperativa' : 'Empresa'
-  }
-  if (occ.includes('catador') || occ.includes('triador') || occ.includes('reciclador')) return 'Catador(a)'
-  return 'Catador(a)'
 }
 
 function resultTags(r) {
@@ -541,7 +522,7 @@ async function handleLogout() {
 .result-body { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .result-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .result-name { font-weight: 700; font-size: 14px; color: var(--color-text); }
-.result-badge { font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 999px; flex-shrink: 0; }
+.result-badge { font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 999px; flex-shrink: 1; max-width: 55%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .result-location { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-3); }
 .result-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
 .mini-tag { background: var(--color-chip-bg); color: var(--color-text-2); font-size: 11px; padding: 3px 8px; border-radius: 999px; }
