@@ -136,7 +136,9 @@
             <div class="result-body">
               <div class="result-top">
                 <span class="result-name">{{ r.nome || r.nomeFantasia || 'Usuário sem nome' }}</span>
-                <span v-if="rotuloPerfil(r)" class="result-badge" :style="badgeStyle(classifyTipo(r))" :title="rotuloPerfil(r)">{{ rotuloPerfil(r) }}</span>
+              </div>
+              <div v-if="rotuloPerfil(r)" class="result-ocupacao">
+                <span class="result-badge" :style="badgeStyle(classifyTipo(r))">{{ rotuloPerfil(r) }}</span>
               </div>
               <div class="result-location">
                 <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="#6B6558" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.1-7-11a7 7 0 0 1 14 0c0 4.9-7 11-7 11z"></path><circle cx="12" cy="10" r="2.5"></circle></svg>
@@ -554,7 +556,8 @@ async function handleLogout() {
 .result-body { flex: 1; display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .result-top { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 .result-name { font-weight: 700; font-size: 14px; color: var(--color-text); }
-.result-badge { font-size: 10.5px; font-weight: 700; padding: 3px 8px; border-radius: 999px; flex-shrink: 1; max-width: 55%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.result-ocupacao { display: flex; }
+.result-badge { font-size: 11.5px; font-weight: 700; padding: 3px 10px; border-radius: 999px; line-height: 1.3; max-width: 100%; }
 .result-location { display: flex; align-items: center; gap: 5px; font-size: 12px; color: var(--color-text-3); }
 .result-tags { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 2px; }
 .mini-tag { background: var(--color-chip-bg); color: var(--color-text-2); font-size: 11px; padding: 3px 8px; border-radius: 999px; }

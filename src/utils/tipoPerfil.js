@@ -20,7 +20,13 @@ export function tipoColor(tipo) {
 
 // Texto que identifica a pessoa/organização como ela mesma informou no cadastro.
 export function rotuloPerfil(p) {
-  return p.ocupacao || p.tipoOrganizacao || (p.tipoCadastro === 'PJ' ? 'Organização' : '')
+  const escolha = p.ocupacao || p.tipoOrganizacao || ''
+  // Quando a pessoa escolheu "Outro" na lista e escreveu qual, mostra o que ela escreveu.
+  if (escolha === 'Outro') {
+    const texto = (p.ocupacao ? p.ocupacaoOutro : p.tipoOrganizacaoOutro) || p.ocupacaoOutro || p.tipoOrganizacaoOutro
+    return (texto || '').trim() || 'Outro'
+  }
+  return escolha || (p.tipoCadastro === 'PJ' ? 'Organização' : '')
 }
 
 export function classifyTipo(p) {
