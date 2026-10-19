@@ -53,6 +53,21 @@
           </div>
         </div>
 
+        <!-- Ocupação -->
+        <div class="filter-block">
+          <button type="button" class="filter-header" @click="toggle('ocupacao')">
+            <span>Ocupação</span>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="#6B6558" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" :class="{ collapsed: !expanded.ocupacao }"><polyline points="6 9 12 15 18 9"></polyline></svg>
+          </button>
+          <div v-if="expanded.ocupacao" class="checklist-scroll">
+            <p v-if="ocupacoesDisponiveis.length === 0" class="empty-filter">Nenhuma ocupação informada ainda.</p>
+            <label v-for="o in ocupacoesDisponiveis" :key="o.nome" class="checklist-row">
+              <input type="checkbox" :value="o.nome" v-model="filters.ocupacao" />
+              {{ o.nome }} ({{ o.qtd }})
+            </label>
+          </div>
+        </div>
+
         <!-- Materiais -->
         <div class="filter-block">
           <button type="button" class="filter-header" @click="toggle('materiais')">
@@ -204,11 +219,12 @@ const filters = reactive({
   keyword: '',
   municipio: [],
   tipo: [],
+  ocupacao: [],
   area: [],
   material: [],
 })
 
-const expanded = reactive({ municipio: true, tipo: true, materiais: false, areas: false })
+const expanded = reactive({ municipio: true, tipo: true, ocupacao: true, materiais: false, areas: false })
 function toggle(key) { expanded[key] = !expanded[key] }
 
 const showAllMunicipios = ref(false)
@@ -238,6 +254,7 @@ function clearFilters() {
   filters.keyword = ''
   filters.municipio = []
   filters.tipo = []
+  filters.ocupacao = []
   filters.area = []
   filters.material = []
 }
@@ -283,6 +300,18 @@ const tipoCounts = computed(() => {
   return counts
 })
 
+// Ocupações realmente informadas nos cadastros, com a quantidade de perfis de cada uma.
+const ocupacoesDisponiveis = computed(() => {
+  const counts = {}
+  allResults.value.forEach((r) => {
+    const o = rotuloPerfil(r)
+    if (o) counts[o] = (counts[o] || 0) + 1
+  })
+  return Object.entries(counts)
+    .map(([nome, qtd]) => ({ nome, qtd }))
+    .sort((a, b) => b.qtd - a.qtd || a.nome.localeCompare(b.nome))
+})
+
 const filteredResults = computed(() => {
   let list = allResults.value.filter((r) => {
     if (filters.keyword) {
@@ -294,6 +323,7 @@ const filteredResults = computed(() => {
       if (!filters.municipio.some((c) => cities.includes(c))) return false
     }
     if (filters.tipo.length && !filters.tipo.includes(classifyTipo(r))) return false
+    if (filters.ocupacao.length && !filters.ocupacao.includes(rotuloPerfil(r))) return false
     if (filters.area.length) {
       const areas = r.areasAtuacao || []
       if (!filters.area.some((a) => areas.includes(a))) return false
@@ -319,6 +349,7 @@ const activeTags = computed(() => {
   const tags = []
   filters.municipio.forEach((m) => tags.push({ key: `municipio-${m}`, kind: 'municipio', value: m, label: m }))
   filters.tipo.forEach((t) => tags.push({ key: `tipo-${t}`, kind: 'tipo', value: t, label: t }))
+  filters.ocupacao.forEach((o) => tags.push({ key: `ocupacao-${o}`, kind: 'ocupacao', value: o, label: o }))
   filters.area.forEach((a) => tags.push({ key: `area-${a}`, kind: 'area', value: a, label: a }))
   filters.material.forEach((m) => tags.push({ key: `material-${m}`, kind: 'material', value: m, label: m }))
   return tags
@@ -464,6 +495,7 @@ async function handleLogout() {
 .chip-toggle { color: var(--color-accent); font-size: 12px; font-weight: 600; padding: 5px 2px; cursor: pointer; }
 
 .checklist-scroll { max-height: 220px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
+.empty-filter { margin: 0; font-size: 12px; color: var(--color-text-3); }
 .group-label { margin: 4px 0 2px 0; font-size: 11px; font-weight: 700; color: var(--color-text-3); text-transform: uppercase; }
 .checklist-row { display: flex; align-items: center; gap: 8px; font-size: 12.5px; color: var(--color-text-2); margin-bottom: 4px; }
 
